@@ -266,9 +266,18 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
 
 output subnetId string = vnet.properties.subnets[0].id
 ```
+# Create the Resource Group
+Before deploying, create the resource group where all resources will live and create your Azure Container Registry (ACR):
+```
+az group create --name rg-sg --location westeurope
+az acr create --name simonacr2025 --resource-group rg-sg --sku Basic --admin-enabled true
+```
+
 # Dockerfile
 
 I used the same Dockerfile from the previous assignment. After building the image locally, I tagged and pushed it to my own Azure Container Registry.
+
+
 
 ```
 docker build -t simonacr2025.azurecr.io/mycrudapp:latest .
@@ -303,11 +312,6 @@ RUN /bin/bash -c "source venv/bin/activate && flask db init && flask db migrate 
 EXPOSE 80
 
 CMD ["/bin/bash", "-c", "source venv/bin/activate && flask run --host=0.0.0.0 --port=80"]
-```
-# Create the Resource Group
-Before deploying, create the resource group where all resources will live:
-```
-az group create --name rg-sg --location westeurope
 ```
 
 # Deploy the ACR using Bicep
