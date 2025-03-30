@@ -329,9 +329,9 @@ az container show --resource-group rg-sg --name sg-crudapp --query ipAddress.ip 
 
 # Best practices implemented
 -  App exposed on HTTP port 80
--  Container image pulled securly
+-  Container image pulled securely
 -  Logs sent to Azure monitor
--  Code-based inftrastructure (Bicep)
+-  Code-based infrastructure (Bicep)
 
 # Verification and Debugging
 
@@ -362,6 +362,14 @@ az group delete --name rg-sg --yes --no-wait
 ```
 
 
+# Extra Notes
+
+I ran into deployment errors with image accessibility and fixed them by:
+- Assigning proper roles using Azure CLI
+- Verifying container logs through Log Analytics
+- Retagging and pushing the image again from Docker
+
+These helped reinforce how authentication and networking work in Azure deployments.
 
 
 
