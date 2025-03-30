@@ -327,7 +327,7 @@ docker push simonacr2025.azurecr.io/mycrudapp:latest
 az deployment group create --resource-group rg-sg --template-file acr.bicep --parameters acrName="simonacr2025"
 ```
 
-# Get ACR Password
+### Get ACR Password
 
 I retrieved my ACR admin password using:
 ```
@@ -336,7 +336,7 @@ az acr credential show --name simonacr2025 --query "passwords[0].value" -o tsv
 ![image](https://github.com/user-attachments/assets/156740a1-c2e1-4489-887c-a10c75e7703d)
 
 
-# Deploy the App Container
+### Deploy the App Container
 
 I deployed the container group using my main.bicep file. I passed the ACR password as a secure parameter:
 
@@ -344,7 +344,7 @@ I deployed the container group using my main.bicep file. I passed the ACR passwo
 az deployment group create --resource-group rg-sg --template-file main.bicep --parameters acrPass="YOUR_ACR_PASSWORD"
 ```
 
-# Get public IP
+### Get public IP
 ```
 az container show --resource-group rg-sg --name sg-crudapp --query ipAddress.ip -o tsv
 ```
