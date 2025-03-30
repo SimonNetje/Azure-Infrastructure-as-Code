@@ -304,6 +304,11 @@ EXPOSE 80
 
 CMD ["/bin/bash", "-c", "source venv/bin/activate && flask run --host=0.0.0.0 --port=80"]
 ```
+# Create the Resource Group
+Before deploying, create the resource group where all resources will live:
+```
+az group create --name rg-sg --location westeurope
+```
 
 # Deploy the ACR using Bicep
 
