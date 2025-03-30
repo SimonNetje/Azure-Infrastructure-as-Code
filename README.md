@@ -23,7 +23,7 @@ This assignment was about deploying a Flask CRUD app to Azure using Infrastructu
 
 # Bicep files used
 
-main.bicep
+###### main.bicep
 
 main.bicep defines the container group deployment and all network/log settings.
 
@@ -194,7 +194,7 @@ output nsgId string = nsg.id
 output logWorkspace string = logWorkspace.name
 ```
 
-acr.bicep
+###### acr.bicep
 
 acr.bicep provisions the container registry with admin access enabled.
 
@@ -225,7 +225,7 @@ output loginServer string = acr.properties.loginServer
 output acrNameOut string = acr.name
 ```
 
-network.bicep
+###### network.bicep
 
 network.bicep (if used separately) would create a virtual network and subnet.
 
