@@ -283,7 +283,7 @@ git clone https://github.com/gurkanakdeniz/example-flask-crud.git
 
 # Dockerfile
 
-I used the same Dockerfile from the previous assignment. After building the image locally, I tagged and pushed it to my own Azure Container Registry.
+I used this Dockerfile. After building the image locally, I tagged and pushed it to my own Azure Container Registry.
 ### Dockerfile
 ```
 FROM python:3.9
