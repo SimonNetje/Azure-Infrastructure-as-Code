@@ -276,6 +276,11 @@ az group create --name rg-sg --location westeurope
 az acr create --name simonacr2025 --resource-group rg-sg --sku Basic --admin-enabled true
 ```
 
+# clone example-flask-crud from github
+```
+git clone https://github.com/gurkanakdeniz/example-flask-crud.git
+```
+
 # Dockerfile
 
 I used the same Dockerfile from the previous assignment. After building the image locally, I tagged and pushed it to my own Azure Container Registry.
