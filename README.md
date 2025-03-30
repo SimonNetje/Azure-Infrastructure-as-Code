@@ -389,7 +389,7 @@ These helped reinforce how authentication and networking work in Azure deploymen
 
 
 # Conclusion
-"This project helped me understand full containerized deployments in Azure using Infrastructure-as-Code, including networking, logging, and secure image management"
+This project helped me understand full containerized deployments in Azure using Infrastructure-as-Code, including networking, logging, and secure image management
 
 
 
