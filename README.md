@@ -181,3 +181,167 @@ output subnetId string = vnet.properties.subnets[0].id
 output nsgId string = nsg.id
 output logWorkspace string = logWorkspace.name
 ```
+
+arc.bicep
+```param acrName string
+param location string = resourceGroup().location
+
+resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
+  name: acrName
+  location: location
+  sku: {
+    name: 'Basic'
+  }
+  properties: {
+    adminUserEnabled: true
+  }
+}
+  resource acrToken 'Microsoft.ContainerRegistry/registries/tokens@2022-12-01' = {
+    name: 'tokensg'
+    parent: acr 
+    properties: {
+      scopeMapId: resourceId('Microsoft.ContainerRegistry/registries/scopeMaps', acrName, '_repositories_pull')
+      status: 'enabled'
+    }
+}
+
+output loginServer string = acr.properties.loginServer
+output acrNameOut string = acr.name
+```
+
+network.bicep
+```
+@description('Name of the Virtual Network')
+param vnetName string
+
+@description('Name of the Subnet to create in the VNet')
+param subnetName string
+
+@description('Region to deploy to')
+param location string = resourceGroup().location
+
+resource vnet 'Microsoft.Network/virtualNetworks@2021-05-01' = {
+  name: vnetName
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        '10.0.0.0/16'
+      ]
+    }
+    subnets: [
+      {
+        name: subnetName
+        properties: {
+          addressPrefix: '10.0.0.0/24'
+          delegations: [
+            {
+              name: 'aciDelegation'
+              properties: {
+                serviceName: 'Microsoft.ContainerInstance/containerGroups'
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+output subnetId string = vnet.properties.subnets[0].id
+```
+# Dockerfile
+
+I used the same Dockerfile from the previous assignment. After building the image locally, I tagged and pushed it to my own Azure Container Registry.
+
+```
+docker build -t simonacr2025.azurecr.io/mycrudapp:latest .
+az acr login --name simonacr2025
+docker push simonacr2025.azurecr.io/mycrudapp:latest
+```
+Dockerfile
+```
+FROM python:3.9
+
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . .
+
+RUN apt-get update && apt-get install -y libpq-dev gcc
+
+RUN python3 -m venv venv
+
+RUN /bin/bash -c "source venv/bin/activate && pip install --upgrade pip && pip install -r requirements.txt"
+
+ENV FLASK_APP=crudapp.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
+RUN /bin/bash -c "source venv/bin/activate && flask db init && flask db migrate -m 'entries table' && flask db upgrade"
+
+EXPOSE 80
+
+CMD ["/bin/bash", "-c", "source venv/bin/activate && flask run --host=0.0.0.0 --port=80"]
+```
+
+# Deploy the ACR using Bicep
+
+```
+az deployment group create --resource-group rg-sg --template-file acr.bicep --parameters acrName="simonacr2025"
+```
+
+# Get ACR Password
+
+I retrieved my ACR admin password using:
+```
+az acr credential show --name simonacr2025 --query "passwords[0].value" -o tsv
+```
+
+# Deploy the App Container
+
+I deployed the container group using my main.bicep file. I passed the ACr password as a secure parameter:
+
+```
+az deployment group create --resource-group rg-sg --template-file main.bicep --parameters acrPass="YOUR_ACR_PASSWORD"
+```
+
+# Get public IP
+```
+az container show --resource-group rg-sg --name sg-crudapp --query ipAddress.ip -o tsv
+```
+
+
+# Best practices implemented
+-  App exposed on HTTP port 80
+-  Container image pulled securly
+-  Logs sent to Azure monitor
+-  Code-based inftrastructure (Bicep)
+
+# Verification and Debugging
+
+check if container is running:
+```
+az container show --resource-group rg-sg --name sg-crudapp --output table
+```
+
+view logs (CLI):
+```
+az container logs --resource-group rg-sg --name sg-crudapp
+```
+
+restart container:
+```
+az container restart --resource-group rg-sg --name sg-crudapp
+```
+
+check docker image in ACR:
+```
+az acr repository list --name simonacr2025 -o table
+az acr repository show-tags --name simonacr2025 --repository mycrudapp -o table
+```
+
+
+
+
+
+
