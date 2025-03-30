@@ -284,20 +284,7 @@ git clone https://github.com/gurkanakdeniz/example-flask-crud.git
 # Dockerfile
 
 I used the same Dockerfile from the previous assignment. After building the image locally, I tagged and pushed it to my own Azure Container Registry.
-
-
-
-```
-docker build -t simonacr2025.azurecr.io/mycrudapp:latest .
-```
-![dockerimage](https://github.com/user-attachments/assets/be8d1410-52bc-4fa9-b63e-e4f7243b1a0c)
-
-
-```
-az acr login --name simonacr2025
-docker push simonacr2025.azurecr.io/mycrudapp:latest
-```
-Dockerfile
+### Dockerfile
 ```
 FROM python:3.9
 
@@ -320,6 +307,18 @@ RUN /bin/bash -c "source venv/bin/activate && flask db init && flask db migrate 
 EXPOSE 80
 
 CMD ["/bin/bash", "-c", "source venv/bin/activate && flask run --host=0.0.0.0 --port=80"]
+```
+
+
+```
+docker build -t simonacr2025.azurecr.io/mycrudapp:latest .
+```
+![dockerimage](https://github.com/user-attachments/assets/be8d1410-52bc-4fa9-b63e-e4f7243b1a0c)
+
+
+```
+az acr login --name simonacr2025
+docker push simonacr2025.azurecr.io/mycrudapp:latest
 ```
 
 # Deploy the ACR using Bicep
