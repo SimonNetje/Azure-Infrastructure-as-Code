@@ -388,5 +388,8 @@ These helped reinforce how authentication and networking work in Azure deploymen
 ![image](https://github.com/user-attachments/assets/ab47b7e7-5720-4bc6-bc5b-1b04f8d24526)
 
 
+# Conclusion
+"This project helped me understand full containerized deployments in Azure using Infrastructure-as-Code, including networking, logging, and secure image management"
+
 
 
