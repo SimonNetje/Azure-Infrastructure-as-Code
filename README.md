@@ -384,6 +384,9 @@ I ran into deployment errors with image accessibility and fixed them by:
 
 These helped reinforce how authentication and networking work in Azure deployments.
 
+# Result
+![image](https://github.com/user-attachments/assets/ab47b7e7-5720-4bc6-bc5b-1b04f8d24526)
+
 
 
 
