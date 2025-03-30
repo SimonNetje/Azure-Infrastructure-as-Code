@@ -272,6 +272,11 @@ I used the same Dockerfile from the previous assignment. After building the imag
 
 ```
 docker build -t simonacr2025.azurecr.io/mycrudapp:latest .
+```
+![dockerimage](https://github.com/user-attachments/assets/be8d1410-52bc-4fa9-b63e-e4f7243b1a0c)
+
+
+```
 az acr login --name simonacr2025
 docker push simonacr2025.azurecr.io/mycrudapp:latest
 ```
@@ -312,6 +317,8 @@ I retrieved my ACR admin password using:
 ```
 az acr credential show --name simonacr2025 --query "passwords[0].value" -o tsv
 ```
+![image](https://github.com/user-attachments/assets/156740a1-c2e1-4489-887c-a10c75e7703d)
+
 
 # Deploy the App Container
 
@@ -339,11 +346,15 @@ check if container is running:
 ```
 az container show --resource-group rg-sg --name sg-crudapp --output table
 ```
+![image](https://github.com/user-attachments/assets/c84be927-42fd-49c4-81ae-c6240ecefbae)
+
 
 view logs (CLI):
 ```
 az container logs --resource-group rg-sg --name sg-crudapp
 ```
+![image](https://github.com/user-attachments/assets/66ff0e6f-709c-4fd9-950e-82973e851580)
+
 
 restart container:
 ```
@@ -355,6 +366,8 @@ check docker image in ACR:
 az acr repository list --name simonacr2025 -o table
 az acr repository show-tags --name simonacr2025 --repository mycrudapp -o table
 ```
+![image](https://github.com/user-attachments/assets/49d4dbb0-1527-4332-880e-adcce0fdfe27)
+
 
 # Clean Up Resources
 ```
