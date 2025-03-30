@@ -2,7 +2,7 @@
 
 # Introduction
 
-This assignment was about deploying a Flask CRUD app to Azure using Infrastructure-as-Code (LaC). I used bicep to define the infrastructure and deployed everything using Azure CLI. The goal of this was to containerize the app, push it to Azure Container Registry, and deploy it using Azure Container Instances with logging and best practices.
+This assignment was about deploying a Flask CRUD app to Azure using Infrastructure-as-Code (IaC). I used bicep to define the infrastructure and deployed everything using Azure CLI. The goal of this was to containerize the app, push it to Azure Container Registry, and deploy it using Azure Container Instances with logging and best practices.
 
 # Overview of what I have built
 
@@ -15,13 +15,19 @@ This assignment was about deploying a Flask CRUD app to Azure using Infrastructu
 # Diagram
 ![azurediagram drawio](https://github.com/user-attachments/assets/74dd350e-ff85-4dd6-a15f-c22837acd7e2)
 
+# Required before beginning
+- Azure CLI installed
+- Docker installed and running
+- Azure subscription + ACR created
 
 
 # Bicep files used
 
 main.bicep
+main.bicep defines the container group deployment and all network/log settings.
 
-```@description('Container group name')
+```
+@description('Container group name')
 param containerName string = 'sg-crudapp'
 
 @description('Region of deployment')
@@ -187,8 +193,11 @@ output nsgId string = nsg.id
 output logWorkspace string = logWorkspace.name
 ```
 
-arc.bicep
-```param acrName string
+acr.bicep
+acr.bicep provisions the container registry with admin access enabled.
+
+```
+param acrName string
 param location string = resourceGroup().location
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
@@ -215,6 +224,8 @@ output acrNameOut string = acr.name
 ```
 
 network.bicep
+network.bicep (if used separately) would create a virtual network and subnet.
+
 ```
 @description('Name of the Virtual Network')
 param vnetName string
@@ -304,7 +315,7 @@ az acr credential show --name simonacr2025 --query "passwords[0].value" -o tsv
 
 # Deploy the App Container
 
-I deployed the container group using my main.bicep file. I passed the ACr password as a secure parameter:
+I deployed the container group using my main.bicep file. I passed the ACR password as a secure parameter:
 
 ```
 az deployment group create --resource-group rg-sg --template-file main.bicep --parameters acrPass="YOUR_ACR_PASSWORD"
@@ -343,6 +354,11 @@ check docker image in ACR:
 ```
 az acr repository list --name simonacr2025 -o table
 az acr repository show-tags --name simonacr2025 --repository mycrudapp -o table
+```
+
+# Clean Up Resources
+```
+az group delete --name rg-sg --yes --no-wait
 ```
 
 
