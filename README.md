@@ -1,5 +1,3 @@
-## Simon Gielen
-
 # Azure-Infrastructure-as-Code
 
 # Introduction
@@ -13,6 +11,11 @@ This assignment was about deploying a Flask CRUD app to Azure using Infrastructu
 - Log Analytics Workspace
 - Virtual Network and Subnet (defined, not deployed)
 - Public IP for the app
+
+# Diagram
+![azurediagram drawio](https://github.com/user-attachments/assets/74dd350e-ff85-4dd6-a15f-c22837acd7e2)
+
+
 
 # Bicep files used
 
